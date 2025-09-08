@@ -1,0 +1,12 @@
+{
+  "liveSassCompile.settings.includeItems": ["src/scss/app.scss"],
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "expanded",
+      "extensionName": ".css",
+      "savePath": "/public/assets/css"
+    }
+  ],
+  "liveSassCompile.settings.generateMap": false,
+  "liveSassCompile.settings.autoprefix": []
+}

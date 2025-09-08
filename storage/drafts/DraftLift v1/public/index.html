@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DraftLift — Scheduler</title>
+    <link rel="icon" type="image/png" sizes="180x180" href="img/take-off.png" />
+    <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    />
+
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="assets/css/app.css" />
+  </head>
+  <body>
+    <div class="loading-overlay hidden" id="loadingOverlay">
+      <div class="sk-fading-circle">
+        <div class="sk-circle1 sk-circle"></div>
+        <div class="sk-circle2 sk-circle"></div>
+        <div class="sk-circle3 sk-circle"></div>
+        <div class="sk-circle4 sk-circle"></div>
+        <div class="sk-circle5 sk-circle"></div>
+        <div class="sk-circle6 sk-circle"></div>
+        <div class="sk-circle7 sk-circle"></div>
+        <div class="sk-circle8 sk-circle"></div>
+        <div class="sk-circle9 sk-circle"></div>
+        <div class="sk-circle10 sk-circle"></div>
+        <div class="sk-circle11 sk-circle"></div>
+        <div class="sk-circle12 sk-circle"></div>
+      </div>
+      <p class="loading-text">Loading, please wait...</p>
+    </div>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1><i class="ri-rocket-2-line"></i> DraftLift</h1>
+        <div class="toolbar">
+          <span id="tzInfo" class="small kpi">
+            <i class="ri-time-line"></i>
+            <span class="pill">Timezone: …</span>
+          </span>
+
+          <button id="btnHelp" class="btn icon">
+            <i class="ri-question-line"></i> Help &amp; Guide
+          </button>
+
+          <button id="btnSettings" class="btn icon">
+            <i class="ri-settings-3-line"></i> Settings
+          </button>
+          <details class="menu" id="maintenanceMenu">
+            <summary class="btn icon">
+              <i class="ri-tools-line"></i> Maintenance
+            </summary>
+            <div class="menu-list">
+              <button id="btnResetSchedule" class="menu-item danger">
+                <i class="ri-restart-line"></i> Reset Schedule
+              </button>
+              <button id="btnResetConfig" class="menu-item warn">
+                <i class="ri-settings-2-line"></i> Reset Configuration
+              </button>
+            </div>
+          </details>
+          <input
+            id="dirInput"
+            type="file"
+            webkitdirectory
+            directory
+            multiple
+            hidden
+          />
+          <button id="btnPickProject" class="btn primary icon">
+            <i class="ri-folder-add-line"></i> Select &amp; Add Project
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="layout">
+      <!-- Schedule Table -->
+      <section class="card main-table-card" style="flex: 2">
+        <div class="card-head">
+          <div style="display: flex; gap: 8px; align-items: center">
+            <strong>Schedule Table</strong>
+            <span id="statusBadge" class="badge">
+              <span class="dot" style="background: #f59e0b"></span>
+              <span>Waiting: 0 • Published: 0</span>
+            </span>
+            <span
+              id="gridRefreshResult"
+              class="small"
+              style="color: var(--primary); font-weight: 500"
+            ></span>
+            <button
+              id="btnGridRefresh"
+              type="button"
+              class="btn icon"
+              title="Refresh table"
+            >
+              <i class="ri-refresh-line"></i>
+            </button>
+          </div>
+
+          <div class="toolbar">
+            <i class="ri-search-line" style="color: #6b7280"></i>
+            <input id="search" class="input" placeholder="Search project…" />
+            <select id="filterStatus" class="select">
+              <option value="all">All</option>
+              <option value="waiting">Waiting</option>
+              <option value="published">Published</option>
+            </select>
+            <select id="sortSel" class="select">
+              <option value="name_asc">Name (A→Z)</option>
+              <option value="name_desc">Name (Z→A)</option>
+              <option value="date_asc">Date (Old→New)</option>
+              <option value="date_desc">Date (New→Old)</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container table-wrapper">
+          <table class="grid">
+            <thead>
+              <tr>
+                <th style="width: 20%">Name</th>
+                <th style="width: 19%">Draft Path</th>
+                <th style="width: 19%">Live Path</th>
+                <th style="width: 160px; min-width: 160px;">Local Time</th>
+                <th style="width: 160px; min-width: 160px;">UTC</th>
+                <th style="width: 5%">Status</th>
+                <th style="width: 5px; min-width: 5px;">Visibility</th> 
+                <th style="width: 80px">Action</th>
+              </tr>
+            </thead>
+            <tbody id="gridBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- History -->
+      <aside class="card history-card" style="flex: 1">
+        <div class="card-head">
+          <strong>History</strong>
+          <div class="toolbar">
+            <span
+              id="historyRefreshResult"
+              class="small"
+              style="color: var(--primary); font-weight: 500"
+            ></span>
+            <button
+              id="btnHistory"
+              type="button"
+              class="btn icon"
+              title="Refresh"
+            >
+              <i class="ri-refresh-line"></i>
+            </button>
+            <button id="btnClearHistory" type="button" class="btn danger icon">
+              <i class="ri-eraser-line"></i> Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="history table-container">
+          <table class="table" id="historyTable">
+            <thead>
+              <tr>
+                <th style="width: 35%;">Time</th>  
+                <th style="width: 20%;">Event</th>  
+                <th style="width: 45%;">Detail</th> </tr>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          <strong>DraftLift v1.0</strong>
+        </div>
+        <div class="footer-center">
+          <a id="footerHelpLink" href="#"
+            >Need help? Check out the Quick Start Guide.</a
+          >
+        </div>
+
+        <span id="gitStatusWrapper" data-tooltip="Refreshes every 2 minutes">
+          <span>Git Status ⏱️ 2 min:</span>
+          <span
+            id="gitStatusIndicator"
+            class="badge status-badge--checking infoStatus"
+          >
+            <span class="dot"></span>Checking...
+          </span>
+        </span>
+      </div>
+    </footer>
+
+    <!-- Settings Dialog -->
+    <dialog id="dlgSettings" class="dlg--settings hidden">
+      <div class="dlg-head">
+        <h3>Application Settings</h3>
+        <button id="btnCloseSettingsX" class="btn icon" aria-label="Close">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <div class="dlg-body">
+        <form class="form form-view-mode" id="settingsForm">
+          <!-- General -->
+          <div class="col-2"><h3 class="section-title">General</h3></div>
+
+          <div class="field with-icon">
+            <label for="timezoneOffset"
+              >Default Timezone Offset (minutes)</label
+            >
+            <i class="ri-time-line"></i>
+            <input
+              id="timezoneOffset"
+              type="number"
+              placeholder="E.g., -420 for UTC-7"
+            />
+          </div>
+
+          <div class="field" style="align-self: end">
+            <label>&nbsp;</label>
+            <button
+              id="btnPublishScan"
+              type="button"
+              class="btn btn--amber"
+              aria-label="Trigger Scan"
+            >
+              <i class="ri-equalizer-line"></i> Trigger Scan Now
+            </button>
+            <span id="scanResult" class="note" style="display: none"></span>
+          </div>
+
+          <hr />
+
+          <!-- Git Integration -->
+          <div class="col-2">
+            <h3 class="section-title">Git Integration</h3>
+          </div>
+
+          <div class="field with-icon">
+            <label for="autoCreateRepo">Auto-Create Private Repo</label>
+            <i class="ri-folder-lock-line"></i>
+            <select id="autoCreateRepo"></select>
+          </div>
+          <div class="field with-icon">
+            <label for="repoVisibility">Repository Visibility</label>
+            <i class="ri-eye-line"></i>
+            <select id="repoVisibility">
+              <option value="true">Private</option>
+              <option value="false">Public</option>
+            </select>
+          </div>
+          <div class="field with-icon">
+            <label for="gitPush">Git Push Enabled</label>
+            <i class="ri-upload-cloud-2-line"></i>
+            <select id="gitPush"></select>
+          </div>
+
+          <div class="field with-icon">
+            <label for="repoOwner">Repository Owner (user/org)</label>
+            <i class="ri-user-3-line"></i>
+            <input id="repoOwner" type="text" />
+          </div>
+          <div class="field with-icon">
+            <label for="branch">Branch</label>
+            <i class="ri-git-commit-line"></i>
+            <input id="branch" type="text" value="main" />
+          </div>
+
+          <div class="field field--full with-icon">
+            <label for="remoteUrl">Remote URL Template</label>
+            <i class="ri-link-m"></i>
+            <input
+              id="remoteUrl"
+              type="text"
+              value="https://github.com/{owner}/{project}.git"
+            />
+          </div>
+
+          <div class="field">
+            <label for="gitAuthorName">Git Commit Author Name</label>
+            <input id="gitAuthorName" type="text" />
+          </div>
+          <div class="field">
+            <label for="gitAuthorEmail">Git Commit Author Email</label>
+            <input id="gitAuthorEmail" type="email" />
+          </div>
+
+          <div class="auth-cluster">
+            <div class="auth-head">
+              <strong style="color: #7c3aed">Authentication</strong>
+              <div class="field" style="min-width: 280px; margin-left: 4px">
+                <label for="authMethod">Authentication Method</label>
+                <select id="authMethod">
+                  <option value="token" selected>
+                    Personal Access Token (PAT)
+                  </option>
+                  <option value="basic">Username / Password</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="auth-two-col">
+              <div id="auth-method-token" class="auth-body active">
+                <div class="field with-icon" style="max-width: 420px">
+                  <label for="pat">Personal Access Token</label>
+                  <i class="ri-key-2-line"></i>
+                  <input id="pat" type="password" />
+                </div>
+              </div>
+
+              <div
+                id="auth-method-basic"
+                class="auth-body single blocked"
+                aria-disabled="true"
+              >
+                <div class="field with-icon">
+                  <label for="username">Username</label>
+                  <i class="ri-user-line"></i>
+                  <input id="username" type="text" disabled />
+                </div>
+                <div class="field with-icon">
+                  <label for="password">Password</label>
+                  <i class="ri-lock-password-line"></i>
+                  <input id="password" type="password" disabled />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dlg-foot">
+            <div class="dlg-foot-left">
+              <button id="btnGitTest" type="button" class="btn btn--teal">
+                <i class="ri-git-branch-line"></i> Test Git Connection
+              </button>
+              <span
+                id="gitTestResult"
+                class="note"
+                style="display: none"
+              ></span>
+            </div>
+
+            <div class="dlg-foot-right">
+              <!-- ⚠️ Hata mesajı Save’in SOLUNA alındı -->
+              <span id="saveResult" class="note" style="display: none"></span>
+              <button id="btnEditSettings" type="button" class="btn">
+                <i class="ri-pencil-line"></i> Edit
+              </button>
+
+              <button
+                id="btnCancelSettings"
+                type="button"
+                class="btn btn--secondary hidden"
+              >
+                Cancel
+              </button>
+
+              <button
+                id="btnSaveSettings"
+                type="button"
+                class="btn primary hidden"
+              >
+                <i class="ri-save-3-line"></i> Save Settings
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Help Dialog -->
+    <dialog id="dlgHelp">
+      <div class="dlg-head">
+        <strong><i class="ri-book-read-line"></i> Quick Start Guide</strong>
+        <button id="closeHelp" class="btn icon" aria-label="Close">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <div class="dlg-body help-content">
+        <h3><i class="ri-rocket-2-line"></i> Welcome to DraftLift!</h3>
+        <p>
+          DraftLift is a tool for scheduling and automating the publishing of
+          your projects. It moves content from a 'draft' folder to a 'live'
+          folder at a specified time.
+        </p>
+        <hr />
+        <h3><i class="ri-list-ordered"></i> How It Works</h3>
+        <ol>
+          <li>
+            Click the
+            <strong
+              ><i class="ri-folder-add-line"></i> Select &amp; Add
+              Project</strong
+            >
+            button to upload your project folder.
+          </li>
+          <li>
+            DraftLift will automatically add the project to the
+            <strong>Schedule Table</strong>.
+          </li>
+          <li>
+            Set your desired publication date/time in the
+            <strong>Local Time</strong> column.
+          </li>
+          <li>
+            Click the
+            <strong><i class="ri-save-3-line"></i> Save</strong> button for that
+            row.
+          </li>
+          <li>
+            That's it! DraftLift will handle the rest at the scheduled time.
+          </li>
+        </ol>
+        <hr />
+        <div class="help-security">
+          <h3><i class="ri-shield-check-line"></i> Paths and Security</h3>
+          <p>
+            For security, DraftLift operates within designated folders. All
+            drafts go to
+            <code>drafts/</code>, and published content moves to
+            <code>projects/</code>.
+          </p>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Toast -->
+    <dialog id="toast" class="toast" aria-live="polite"></dialog>
+    <!-- Git için merkez modal/dialog -->
+    <dialog id="gitStatusDialog" class="git-status-toast">
+      <div class="git-status-toast__content">Checking Git Status…</div>
+    </dialog>
+    <div id="errorDetailPopup" class="popup-overlay hidden">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h3>Hata Detayları</h3>
+          <button class="close-popup-btn">&times;</button>
+        </div>
+        <div class="popup-body">
+          <pre id="popupErrorDetails"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> <!-- flatpickr library for date -->
+    <!-- App JS -->
+    <script type="module" src="assets/js/app.js"></script>
+
+  </body>
+</html>
