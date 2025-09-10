@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "name": "react-MovieApp",
+    "draftPath": "drafts/react-movieapp",
+    "livePath": "projects/react-movieapp",
+    "publish_at": "2026-09-23T17:00:00Z",
+    "published_at": null,
+    "gitRepoPrivate": null
+  },
+  {
+    "name": "js-Intro",
+    "draftPath": "drafts/js-intro",
+    "livePath": "projects/js-intro",
+    "publish_at": "2025-09-10T17:00:00Z",
+    "published_at": null,
+    "gitRepoPrivate": null
+  },
+  {
+    "name": "HtmlCss-Recap",
+    "draftPath": "drafts/htmlcss-recap",
+    "livePath": "projects/htmlcss-recap",
+    "publish_at": "2025-09-10T17:00:00Z",
+    "published_at": null,
+    "gitRepoPrivate": null
+  }
+]
