@@ -6,6 +6,7 @@ const Busboy = require("busboy");
 const { ensureDir } = require("../lib/fsx");
 const { readJSON, writeJSONAtomic } = require("../lib/json-store");
 const { appendAudit } = require("../lib/audit");
+const { sanitizeRepoName } = require("../lib/git");
 const {
   FILE_SCHEDULE,
   FILE_ADMIN_CONFIG,
@@ -36,8 +37,9 @@ router.post("/", (req, res) => {
       const parts = rel.split(/[\/\\]/);
       inferredRoot = inferredRoot || parts[0] || "";
       const finalName = projectName || inferredRoot;
+      const sanitizedName = sanitizeRepoName(finalName);
       const destRel = parts.slice(1).join("/");
-      const dest = path.join(DIR_DRAFTS, finalName, destRel);
+      const dest = path.join(DIR_DRAFTS, sanitizedName, destRel);
       (async () => {
         try {
           await ensureDir(path.dirname(dest));
@@ -58,6 +60,7 @@ router.post("/", (req, res) => {
 
   busboy.on("close", async () => {
     const name = projectName || inferredRoot;
+    const sanitizedName = sanitizeRepoName(name);
     try {
       const list = await readJSON(FILE_SCHEDULE, []);
       const exists = list.some((x) => x && x.name === name);
@@ -71,8 +74,8 @@ router.post("/", (req, res) => {
           .replace(/\.\d{3}Z$/, "Z");
         list.push({
           name,
-          draftPath: `drafts/${name}`,
-          livePath: `projects/${name}`,
+          draftPath: `drafts/${sanitizedName}`, // Yollarda temizlenmiş ismi kullan
+          livePath: `projects/${sanitizedName}`, // Yollarda temizlenmiş ismi kullan
           publish_at,
         });
         await writeJSONAtomic(FILE_SCHEDULE, list);

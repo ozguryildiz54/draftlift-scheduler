@@ -1,3 +1,0 @@
-- Push: git remote, user/email?
-- Webhook URL/KIND?
-- Çakışma: aynı livePath <15dk → otomatik çöz.

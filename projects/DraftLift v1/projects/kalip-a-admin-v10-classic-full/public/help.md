@@ -1,7 +1,0 @@
-- Planlama/Çipler/Çakışma +15dk/Depend Kaydır
-- TZ ↔ UTC
-- Klasör seç + sürükle-bırak yükleme
-- JSON dışa aktar
-- Kaydet / Dry-Run / Publish Now / Push
-- Webhook test
-- Snapshot & Geçmiş
