@@ -1,14 +1,6 @@
 {
-  "DEFAULT_TZ": -240,
+  "DEFAULT_TZ": 180,
   "GIT": {
-    "enabled": true,
-    "userName": "ozguryildiz54",
-    "userEmail": "ozguryildiz.ada@gmail.com",
-    "owner": "ozguryildiz54",
-    "remoteTpl": "https://github.com/{owner}/{project}.git",
-    "auth": "token",
-    "branch": "main",
-    "autoCreate": true,
-    "private": false
+    "enabled": false
   }
 }
