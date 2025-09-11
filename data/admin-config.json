@@ -4,7 +4,7 @@
     "enabled": true,
     "userName": "ozguryildiz54",
     "userEmail": "ozguryildiz.ada@gmail.com",
-    "owner": "ozguyildiz54",
+    "owner": "ozguryildiz54",
     "remoteTpl": "https://github.com/{owner}/{project}.git",
     "auth": "token",
     "username": "",

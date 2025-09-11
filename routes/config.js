@@ -16,16 +16,14 @@ function maskSecrets(cfg) {
   }
   return cfg;
 }
-function mergeWithEnv(cfg) {
+function mergeWithEnv(cfg = {}) {
   const out = { ...cfg };
-
   if (out.GIT?.auth === "token") {
     out.GIT.token = process.env.GITHUB_TOKEN || null;
   } else if (out.GIT?.auth === "basic") {
     out.GIT.username = process.env.GIT_USERNAME || null;
     out.GIT.password = process.env.GIT_PASSWORD || null;
   }
-
   return out;
 }
 
