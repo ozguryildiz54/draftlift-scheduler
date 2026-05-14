@@ -37,7 +37,7 @@ $ npm start
 
 [09:00:01] 🔧 recipe-app
             ├─ git init                    ✓
-            ├─ git remote add origin       ✓ → github.com/ozguryildiz54/recipe-app
+            ├─ git remote add origin       ✓ → github.com/yldzozgur/recipe-app
             ├─ git add . (43 files)        ✓
             ├─ git commit -m "Initial..."  ✓ (a1b2c3d)
             ├─ git push -u origin main     ✓
@@ -128,7 +128,7 @@ draftlift/
 
 ```bash
 # 1. Clone
-git clone https://github.com/ozguryildiz54/draftlift-scheduler.git
+git clone https://github.com/yldzozgur/draftlift-scheduler.git
 cd draftlift-scheduler
 
 # 2. Install
@@ -217,4 +217,4 @@ No more "is this on my GitHub?" anxiety, no more bulk-pushing 20 repos at once o
 
 ---
 
-Built by [Ozgur Yildiz](https://github.com/ozguryildiz54) · ISC License
+Built by [Ozgur Yildiz](https://github.com/yldzozgur) · ISC License

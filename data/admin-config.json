@@ -2,9 +2,9 @@
   "DEFAULT_TZ": -240,
   "GIT": {
     "enabled": true,
-    "userName": "ozguryildiz54",
+    "userName": "yldzozgur",
     "userEmail": "ozguryildiz.ada@gmail.com",
-    "owner": "ozguryildiz54",
+    "owner": "yldzozgur",
     "remoteTpl": "https://github.com/{owner}/{project}.git",
     "auth": "token",
     "username": "",

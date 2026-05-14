@@ -2,7 +2,7 @@
  * @file        routes/history.js
  * @description İşlem geçmişi (audit log) verilerini yöneten API rotalarını içerir.
  * Bu dosya, geçmişi okuma ve temizleme (arşivleyerek) işlemlerinden sorumludur.
- * @author      @ozguryildiz54
+ * @author      @yldzozgur
  * @version     1.2.0
  * @date        2025-09-08
  */
