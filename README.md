@@ -1,3 +1,5 @@
+<p align="center"><img src="og-cover.png" alt="DraftLift Scheduler" width="100%" /></p>
+
 # 🚀 DraftLift Scheduler
 
 > Self-hosted automation tool that schedules and auto-publishes local project folders to GitHub on a cron schedule. Built to solve the "I have 30 finished projects sitting on my disk that I keep forgetting to push" problem.
