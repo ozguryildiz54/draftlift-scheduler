@@ -144,3 +144,10 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,node
+# Runtime data and working folders (not source)
+data/audit.jsonl
+data/schedule.json
+storage/
+drafts/
+projects/
+deleted/

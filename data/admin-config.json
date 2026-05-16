@@ -3,7 +3,7 @@
   "GIT": {
     "enabled": true,
     "userName": "yldzozgur",
-    "userEmail": "ozguryildiz.ada@gmail.com",
+    "userEmail": "",
     "owner": "yldzozgur",
     "remoteTpl": "https://github.com/{owner}/{project}.git",
     "auth": "token",
